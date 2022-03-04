@@ -2,7 +2,7 @@
 
 ## slz
 
-a (quick) binding for http://www.libslz.org/
+a (light) binding for http://www.libslz.org/
 
 ```
 o = slz.compressobj
