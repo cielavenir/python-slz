@@ -14,6 +14,8 @@ ext_modules = [
     Pybind11Extension(
         "slz",
         ['src/pyslz.cpp', 'src/libslz/src/slz.c'],  # Sort source files for reproducibility
+        extra_compile_args=['-O2'],
+        extra_link_args=['-s'],
     ),
 ]
 
@@ -21,7 +23,7 @@ setup(
     name='slz',
     description='a (light) binding for libslz',
     long_description=open("README.md").read(),
-    version='0.0.0.1',
+    version='0.0.0.2',
     url='https://github.com/cielavenir/python-slz',
     license='MIT',
     author='cielavenir',
