@@ -126,7 +126,7 @@ setup(
     name='slz',
     description='a (light) binding for libslz',
     long_description=open("../README.md").read(),
-    version='0.0.0.1',
+    version='0.0.0.3',
     url='https://github.com/cielavenir/python-slz',
     license='PSF',
     author='cielavenir',

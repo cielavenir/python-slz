@@ -27,6 +27,7 @@ public:
             char *buffer = nullptr;
             ssize_t length = 0;
             PYBIND11_BYTES_AS_STRING_AND_SIZE(obj.ptr(), &buffer, &length);
+            py::gil_scoped_release release;
             written = slz_encode(&strm, &out[0], buffer, length, 1);
         }
         //out.resize(written);
