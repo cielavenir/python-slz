@@ -40,7 +40,11 @@ public:
             out.reserve(outsize);
         }
         //out.resize(tempoutsize);
-        size_t written = slz_finish(&strm, &out[0]);
+        size_t written = 0;
+        {
+            py::gil_scoped_release release;
+            written = slz_finish(&strm, &out[0]);
+        }
         //out.resize(written);
         return py::bytes(out.data(), written);
     }
