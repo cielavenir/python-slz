@@ -4,6 +4,10 @@ extern "C" {
 #include "libslz/src/slz.h"
 }
 
+#if defined(_WIN32) || (!defined(__GNUC__) && !defined(__clang__))
+#define ssize_t Py_ssize_t
+#endif
+
 namespace py = pybind11;
 using namespace pybind11::literals;
 
