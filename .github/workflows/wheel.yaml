@@ -8,7 +8,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest]  # sorry incompatible with MSVC, so Windows wheel cannot be shipped
+        os: [windows-latest]  # sorry incompatible with MSVC, so Windows wheel cannot be shipped
         python-version: ["2.7", "3.5", "3.6", "3.7", "3.8", "3.9", "3.10"]
 
     steps:
@@ -31,7 +31,9 @@ jobs:
         pyproject-build --sdist
     - name: Build wheel
       run: |
-        pyproject-build --wheel
+        #pyproject-build --wheel
+        python setup.py build --compiler=mingw32
+        python setup.py bdist_wheel
     - name: Upload wheel
       uses: actions/upload-artifact@v2
       with:
