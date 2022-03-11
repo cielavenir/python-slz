@@ -13,14 +13,11 @@ jobs:
         include:
           - python-version: '3.4'
             os: ubuntu-18.04
-        include:
           - python-version: '3.9'
             os: macos-latest
-        include:
           - python-version: '3.9'
             os: windows-latest
             architecture: "x64"
-        include:
           - python-version: '3.9'
             os: windows-latest
             architecture: "x86"
