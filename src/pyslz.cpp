@@ -21,6 +21,7 @@ public:
     }
     py::bytes compress(const py::bytes &obj){
 		fprintf(stderr, "0\n");fflush(stderr);
+		fprintf(stderr, "iii_%d\n", py::len(obj));fflush(stderr);
         int tempoutsize = py::len(obj)+py::len(obj)/16;
         if(outsize < tempoutsize){
             outsize = tempoutsize;
@@ -38,6 +39,7 @@ public:
             written = slz_encode(&strm, &out[0], buffer, length, 1);
         }
         //out.resize(written);
+		fprintf(stderr, "ooo_%d\n", written);fflush(stderr);
         return py::bytes(out.data(), written);
     }
     py::bytes flush(){
