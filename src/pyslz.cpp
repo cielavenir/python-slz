@@ -23,7 +23,7 @@ public:
         int tempoutsize = py::len(obj)+py::len(obj)/16;
         if(outsize < tempoutsize){
             outsize = tempoutsize;
-            out.reserve(outsize);
+            out.resize(outsize);
         }
         //out.resize(tempoutsize);
         size_t written = 0;
@@ -41,7 +41,7 @@ public:
         int tempoutsize = 12;
         if(outsize < tempoutsize){
             outsize = tempoutsize;
-            out.reserve(outsize);
+            out.resize(outsize);
         }
         //out.resize(tempoutsize);
         size_t written = 0;
