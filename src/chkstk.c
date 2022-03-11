@@ -1,1 +1,1 @@
-void __chkstk_ms(){}
+void ___chkstk_ms(){}
