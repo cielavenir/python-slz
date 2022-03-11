@@ -24,16 +24,15 @@ jobs:
     - name: Install tox and pypa-build
       run: |
         pip install --upgrade pip
-        pip install tox build
+        pip install tox build wheel
     - name: Build sdist
       if: ${{ matrix.os == 'macos-latest' && matrix.python-version == '2.7' }}
       run:
         pyproject-build --sdist
     - name: Build wheel
       run: |
-        #pyproject-build --wheel
-        python setup.py build --compiler=mingw32
-        python setup.py bdist_wheel
+        gcc -c -o slz.o -O2 src/libslz/src/slz.c
+        pyproject-build --wheel
     - name: Upload wheel
       uses: actions/upload-artifact@v2
       with:

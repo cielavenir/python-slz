@@ -1,4 +1,5 @@
 import sys
+import platform
 from os.path import dirname
 from os.path import abspath
 sys.path.append(dirname(abspath(__file__)))
@@ -10,10 +11,19 @@ try:
 except ImportError:
 	from setuptools import Extension as Pybind11Extension
 
+sources = ['src/pyslz.cpp']
+extra_objects = []
+
+if platform.system() == 'Windows':
+    extra_objects.append('slz.o')
+else:
+    sources.append('src/libslz/src/slz.c')
+
 ext_modules = [
     Pybind11Extension(
         "slz",
-        ['src/pyslz.cpp', 'src/libslz/src/slz.c'],  # Sort source files for reproducibility
+        sources,
+        extra_objects=extra_objects,
         extra_compile_args=['-O2'],
         extra_link_args=['-s'],
     ),
