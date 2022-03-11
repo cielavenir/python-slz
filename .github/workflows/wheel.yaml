@@ -36,6 +36,7 @@ jobs:
     - name: Build wheel
       run: |
         gcc -c -o slz.o -O2 src/libslz/src/slz.c
+        gcc -c -o chkstk.o src/chkstk.c
         pyproject-build --wheel
     - name: Upload wheel
       uses: actions/upload-artifact@v2
