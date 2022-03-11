@@ -48,4 +48,4 @@ jobs:
         python setup.py install
     - name: Test
       run: |
-        pytest -v test
+        pytest -v test -s
