@@ -15,12 +15,6 @@ jobs:
             os: ubuntu-18.04
           - python-version: '3.9'
             os: macos-latest
-          - python-version: '3.9'
-            os: windows-latest
-            architecture: "x64"
-          - python-version: '3.9'
-            os: windows-latest
-            architecture: "x86"
 
     steps:
     - uses: actions/checkout@v2
