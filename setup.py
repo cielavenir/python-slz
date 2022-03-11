@@ -15,7 +15,7 @@ sources = ['src/pyslz.cpp']
 extra_objects = []
 
 if platform.system() == 'Windows':
-    extra_objects.extend(['slz.o', 'chkstk.o'])
+    extra_objects.extend(['slz.o'])
 else:
     sources.append('src/libslz/src/slz.c')
 
