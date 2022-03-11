@@ -36,7 +36,8 @@ jobs:
     - name: Build slz
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
-        gcc -c -fno-stack-check -o slz.o -O2 src/libslz/src/slz.c
+        gcc -c -o slz.o -O2 src/libslz/src/slz.c
+        as -o chkstk.o src/chkstk.S
     - name: Install
       run: |
         python setup.py install
