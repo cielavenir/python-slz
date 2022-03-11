@@ -17,6 +17,7 @@ jobs:
             os: macos-latest
           - python-version: '3.9'
             os: windows-latest
+            architecture: 'x86'
 
     steps:
     - uses: actions/checkout@v2
