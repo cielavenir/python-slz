@@ -26,7 +26,7 @@ printf("pypypy %d\n",sizeof(slz_stream));
 #else
         pstrm = &strm;
 #endif
-        slz_init(&strm, level, format);
+        slz_init(pstrm, level, format);
     }
     ~slz_compressobj(){
 #if defined(_WIN32) || (!defined(__GNUC__) && !defined(__clang__))
@@ -50,8 +50,8 @@ printf("pypypy %d\n",sizeof(slz_stream));
             PYBIND11_BYTES_AS_STRING_AND_SIZE(obj.ptr(), &buffer, &length);
             //py::gil_scoped_release release;
 			fprintf(stderr, "2\n");fflush(stderr);
-            written = slz_encode(&strm, &out[0], buffer, length, 1);
-  //written = slz_finish(&strm, &out[0]);
+            written = slz_encode(pstrm, &out[0], buffer, length, 1);
+  //written = slz_finish(pstrm, &out[0]);
       }
         //out.resize(written);
 		fprintf(stderr, "ooo_%d\n", written);fflush(stderr);
@@ -70,7 +70,7 @@ printf("pypypy %d\n",sizeof(slz_stream));
 			fprintf(stderr, "f1\n");fflush(stderr);
             //py::gil_scoped_release release;
 			fprintf(stderr, "f2\n");fflush(stderr);
-            written = slz_finish(&strm, &out[0]);
+            written = slz_finish(pstrm, &out[0]);
         }
         //out.resize(written);
         return py::bytes(out.data(), written);
