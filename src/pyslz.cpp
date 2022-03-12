@@ -36,7 +36,7 @@ public:
             PYBIND11_BYTES_AS_STRING_AND_SIZE(obj.ptr(), &buffer, &length);
             //py::gil_scoped_release release;
 			fprintf(stderr, "2\n");fflush(stderr);
-            written = slz_encode(&strm, &out[0], buffer, length, 1);
+            //written = slz_encode(&strm, &out[0], buffer, length, 1);
         }
         //out.resize(written);
 		fprintf(stderr, "ooo_%d\n", written);fflush(stderr);
