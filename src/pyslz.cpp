@@ -2,6 +2,8 @@
 
 extern "C" {
 #include "libslz/src/slz.h"
+struct slz_stream *slz_alloc();
+void slz_free(struct slz_stream *s);
 }
 
 #if defined(_WIN32) || (!defined(__GNUC__) && !defined(__clang__))
@@ -13,12 +15,23 @@ using namespace pybind11::literals;
 
 class slz_compressobj{
     slz_stream strm;
+    slz_stream *pstrm;
     std::string out;
     int outsize;
 public:
     slz_compressobj(int level=1, int format=SLZ_FMT_DEFLATE): outsize(0){
 printf("pypypy %d\n",sizeof(slz_stream));
+#if defined(_WIN32) || (!defined(__GNUC__) && !defined(__clang__))
+        pstrm = slz_alloc();
+#else
+        pstrm = &strm;
+#endif
         slz_init(&strm, level, format);
+    }
+    ~slz_compressobj(){
+#if defined(_WIN32) || (!defined(__GNUC__) && !defined(__clang__))
+        slz_free(pstrm);
+#endif
     }
     py::bytes compress(const py::bytes &obj){
 		fprintf(stderr, "0\n");fflush(stderr);
