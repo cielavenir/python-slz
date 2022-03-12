@@ -17,6 +17,7 @@ class slz_compressobj{
     int outsize;
 public:
     slz_compressobj(int level=1, int format=SLZ_FMT_DEFLATE): outsize(0){
+printf("pypypy %d\n",sizeof(slz_stream));
         slz_init(&strm, level, format);
     }
     py::bytes compress(const py::bytes &obj){
