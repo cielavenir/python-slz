@@ -1,5 +1,8 @@
 #include <pybind11/pybind11.h>
 
+#ifdef _M_AMD64
+#define __x86_64__ 1
+#endif
 extern "C" {
 #include "libslz/src/slz.h"
 struct slz_stream *slz_alloc();
@@ -21,7 +24,8 @@ class slz_compressobj{
 public:
     slz_compressobj(int level=1, int format=SLZ_FMT_DEFLATE): outsize(0){
 printf("pypypy %d\n",sizeof(slz_stream));
-#if defined(_WIN32) || (!defined(__GNUC__) && !defined(__clang__))
+#if 0
+//defined(_WIN32) || (!defined(__GNUC__) && !defined(__clang__))
         pstrm = slz_alloc();
 #else
         pstrm = &strm;
@@ -29,7 +33,8 @@ printf("pypypy %d\n",sizeof(slz_stream));
         slz_init(pstrm, level, format);
     }
     ~slz_compressobj(){
-#if defined(_WIN32) || (!defined(__GNUC__) && !defined(__clang__))
+#if 0
+//defined(_WIN32) || (!defined(__GNUC__) && !defined(__clang__))
         slz_free(pstrm);
 #endif
     }
