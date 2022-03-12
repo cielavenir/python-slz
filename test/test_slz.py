@@ -12,8 +12,8 @@ def test_slz():
         siz = 1024
         cnt = (l+siz-1)//siz
         dfl = slz.compressobj(level=0)
-        for i in range(cnt):
-            bytesio.write(dfl.compress(f.read(siz)))
+        #for i in range(cnt):
+        #    bytesio.write(dfl.compress(f.read(siz)))
         bytesio.write(dfl.flush())
         # print(len(bytesio.getvalue()))
     bytesio.seek(0)
