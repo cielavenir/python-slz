@@ -1,3 +1,20 @@
+// https://github.com/llvm-mirror/compiler-rt/blob/master/lib/builtins/x86_64/chkstk.S
+
+// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
+// See https://llvm.org/LICENSE.txt for license information.
+// SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
+
+// _chkstk routine
+// This routine is windows specific
+// http://msdn.microsoft.com/en-us/library/ms648426.aspx
+
+// Notes from r227519
+// MSVC x64s __chkstk and cygmings ___chkstk_ms do not adjust %rsp
+// themselves. It also does not clobber %rax so we can reuse it when
+// adjusting %rsp.
+
+#ifdef __x86_64__
+
 .global ___chkstk_ms
 
 .text
@@ -20,3 +37,5 @@ ___chkstk_ms:
         pop    %rax
         pop    %rcx
         ret
+
+#endif // __x86_64__
