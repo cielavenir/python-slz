@@ -15,6 +15,8 @@ jobs:
             os: ubuntu-18.04
           - python-version: '3.9'
             os: macos-latest
+          - python-version: '3.9'
+            os: windows-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -31,9 +33,14 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install pytest wheel pybind11
     # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+    - name: Build slz
+      if: ${{ matrix.os == 'windows-latest' }}
+      run: |
+        gcc -c -DPRECOMPUTE_TABLES=1 -o slz.o -O2 src/libslz/src/slz.c
+        as -o chkstk.o src/chkstk.S
     - name: Install
       run: |
         python setup.py install
     - name: Test
       run: |
-        pytest -v test
+        pytest -v test -s

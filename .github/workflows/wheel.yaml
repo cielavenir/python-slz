@@ -8,8 +8,11 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest]  # sorry incompatible with MSVC, so Windows wheel cannot be shipped
+        os: [macos-latest, windows-latest]
         python-version: ["2.7", "3.5", "3.6", "3.7", "3.8", "3.9", "3.10"]
+        exclude:
+          - python-version: '2.7'
+            os: windows-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -21,14 +24,23 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
+    # - name: "Install Visual C++ for Python 2.7"
+    #   if: ${{ matrix.os == 'windows-latest' && matrix.python-version == '2.7' }}
+    #   run: |
+    #     choco install vcpython27 -f -y
     - name: Install tox and pypa-build
       run: |
         pip install --upgrade pip
-        pip install tox build
+        pip install tox build wheel
     - name: Build sdist
       if: ${{ matrix.os == 'macos-latest' && matrix.python-version == '2.7' }}
       run:
         pyproject-build --sdist
+    - name: Build slz
+      if: ${{ matrix.os == 'windows-latest' }}
+      run: |
+        gcc -c -DPRECOMPUTE_TABLES=1 -o slz.o -O2 src/libslz/src/slz.c
+        as -o chkstk.o src/chkstk.S
     - name: Build wheel
       run: |
         pyproject-build --wheel

@@ -1,5 +1,8 @@
 #include <pybind11/pybind11.h>
 
+#ifdef _M_AMD64
+#define __x86_64__ 1 // otherwise sizeof(struct slz_stream) goes wrong when refered from MSVC
+#endif
 extern "C" {
 #include "libslz/src/slz.h"
 }
