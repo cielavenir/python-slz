@@ -44,7 +44,6 @@ jobs:
       run: |
         gcc -c -DPRECOMPUTE_TABLES=1 -o slz.o -O2 src/libslz/src/slz.c
         as -o chkstk.o src/chkstk.S
-        #clang -c -DPRECOMPUTE_TABLES=1 -o slz_alloc.o -O2 src/libslz/src/slz_alloc.c
     - name: Install
       run: |
         python setup.py install
