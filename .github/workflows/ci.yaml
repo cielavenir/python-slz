@@ -29,7 +29,7 @@ jobs:
       run: |
         git -C src/libslz remote add ciel https://github.com/cielavenir/libslz
         git -C src/libslz fetch ciel
-        git -C src/libslz checkout ciel/1.2.0_malloc
+        #git -C src/libslz checkout ciel/1.2.0_malloc
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
@@ -42,8 +42,9 @@ jobs:
     - name: Build slz
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
-        clang -c -DPRECOMPUTE_TABLES=1 -o slz.o -O2 src/libslz/src/slz.c
-        clang -c -DPRECOMPUTE_TABLES=1 -o slz_alloc.o -O2 src/libslz/src/slz_alloc.c
+        gcc -c -DPRECOMPUTE_TABLES=1 -o slz.o -O2 src/libslz/src/slz.c
+        as -o chkstk.o src/chkstk.S
+        #clang -c -DPRECOMPUTE_TABLES=1 -o slz_alloc.o -O2 src/libslz/src/slz_alloc.c
     - name: Install
       run: |
         python setup.py install
