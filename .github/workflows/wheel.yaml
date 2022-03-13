@@ -10,9 +10,9 @@ jobs:
       matrix:
         os: [macos-latest, windows-latest]
         python-version: ["2.7", "3.5", "3.6", "3.7", "3.8", "3.9", "3.10"]
-        #exclude:
-        #  - python-version: '2.7'
-        #    os: windows-latest
+        exclude:
+          - python-version: '2.7' # pybind11 requires VC2015 and thus can build only >=3.5 wheels
+            os: windows-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -24,11 +24,11 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-    - name: "Install Visual C++ for Python 2.7"
-      if: ${{ matrix.os == 'windows-latest' && matrix.python-version == '2.7' }}
-      run: |
-          curl -L -O https://github.com/reider-roque/sulley-win-installer/raw/master/VCForPython27.msi
-          msiexec /i VCForPython27.msi /qn
+    # - name: "Install Visual C++ for Python 2.7"
+    #   if: ${{ matrix.os == 'windows-latest' && matrix.python-version == '2.7' }}
+    #   run: |
+    #     curl -L -O https://github.com/reider-roque/sulley-win-installer/raw/master/VCForPython27.msi
+    #     msiexec /i VCForPython27.msi /qn
     #     choco install vcpython27 -f -y
     - name: Install tox and pypa-build
       run: |
