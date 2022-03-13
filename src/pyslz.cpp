@@ -44,7 +44,7 @@ public:
         int tempoutsize = 12;
         if(outsize < tempoutsize){
             outsize = tempoutsize;
-            out.resize(outsize);
+            out.reserve(outsize);
         }
         //out.resize(tempoutsize);
         size_t written = 0;
