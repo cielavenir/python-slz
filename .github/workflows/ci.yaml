@@ -42,7 +42,7 @@ jobs:
       run: |
         wget -O pyston.deb https://github.com/pyston/pyston/releases/download/pyston_2.3.2/pyston_2.3.2_20.04.deb
         sudo apt update
-        sudo apt install -y pyston.deb
+        sudo apt install -y ./pyston.deb
         sudo ln -sf pyston /usr/bin/python
     - name: Install dependencies
       run: |
