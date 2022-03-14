@@ -19,7 +19,7 @@
 .balign 4
 
 ___chkstk_ms:
-#ifdef __x86_64__
+#if defined(__x86_64__)
         push   %rcx
         push   %rax
         cmp    $0x1000,%rax
@@ -37,9 +37,7 @@ ___chkstk_ms:
         pop    %rax
         pop    %rcx
         ret
-#endif // __x86_64__
-
-#ifdef __i386__
+#elif defined(__i386__)
         push   %ecx
         push   %eax
         cmp    $0x1000,%eax
@@ -57,4 +55,4 @@ ___chkstk_ms:
         pop    %eax
         pop    %ecx
         ret
-#endif // __i386__
+#endif
