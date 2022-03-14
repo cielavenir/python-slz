@@ -66,7 +66,6 @@ jobs:
     - name: Build wheel
       if: ${{ matrix.python-version == '3.4' }}
       run: |
-        pyproject-build --wheel
         python -m pip wheel --wheel-dir dist .
     - name: Upload wheel
       uses: actions/upload-artifact@v2
