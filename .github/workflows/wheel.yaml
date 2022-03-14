@@ -56,7 +56,7 @@ jobs:
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
         gcc -c -DPRECOMPUTE_TABLES=1 -o slz.o -O2 src/libslz/src/slz.c
-        gcc -o chkstk.o src/chkstk.S
+        gcc -c -o chkstk.o src/chkstk.S
     - name: Build wheel
       run: |
         pyproject-build --wheel
