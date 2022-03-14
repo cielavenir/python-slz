@@ -30,7 +30,6 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: ${{ matrix.python-version }}
-        architecture: ${{ matrix.architecture }}
     - name: Set up Pyston
       if: ${{ matrix.python-version == 'pyston' }}
       run: |
