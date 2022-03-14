@@ -58,7 +58,7 @@ jobs:
       if: ${{ matrix.os == 'windows-latest' }}
       run: |
         gcc -c -DPRECOMPUTE_TABLES=1 -o slz.o -O2 src/libslz/src/slz.c
-        as -o chkstk.o src/chkstk.S
+        gcc -o chkstk.o src/chkstk.S
     - name: Build wheel
       if: ${{ matrix.python-version != '3.4' }}
       run: |
