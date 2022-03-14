@@ -14,8 +14,6 @@ jobs:
           - python-version: '2.7' # pybind11 requires VC2015 and thus can build only >=3.5 wheels
             os: windows-latest
         include:
-          - python-version: '3.4'
-            os: ubuntu-18.04
           - python-version: 'pyston'
             os: ubuntu-18.04
 
@@ -60,13 +58,8 @@ jobs:
         gcc -c -DPRECOMPUTE_TABLES=1 -o slz.o -O2 src/libslz/src/slz.c
         gcc -o chkstk.o src/chkstk.S
     - name: Build wheel
-      if: ${{ matrix.python-version != '3.4' }}
       run: |
         pyproject-build --wheel
-    - name: Build wheel
-      if: ${{ matrix.python-version == '3.4' }}
-      run: |
-        python -m pip wheel --wheel-dir dist .
     - name: Upload wheel
       uses: actions/upload-artifact@v2
       with:
