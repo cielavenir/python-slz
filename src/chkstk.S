@@ -1,3 +1,4 @@
+// https://github.com/llvm-mirror/compiler-rt/blob/master/lib/builtins/i386/chkstk.S
 // https://github.com/llvm-mirror/compiler-rt/blob/master/lib/builtins/x86_64/chkstk.S
 
 // Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
@@ -13,13 +14,12 @@
 // themselves. It also does not clobber %rax so we can reuse it when
 // adjusting %rsp.
 
-#ifdef __x86_64__
-
 .global ___chkstk_ms
-
 .text
 .balign 4
+
 ___chkstk_ms:
+#ifdef __x86_64__
         push   %rcx
         push   %rax
         cmp    $0x1000,%rax
@@ -37,5 +37,24 @@ ___chkstk_ms:
         pop    %rax
         pop    %rcx
         ret
-
 #endif // __x86_64__
+
+#ifdef __i386__
+        push   %ecx
+        push   %eax
+        cmp    $0x1000,%eax
+        lea    12(%esp),%ecx
+        jb     1f
+2:
+        sub    $0x1000,%ecx
+        test   %ecx,(%ecx)
+        sub    $0x1000,%eax
+        cmp    $0x1000,%eax
+        ja     2b
+1:
+        sub    %eax,%ecx
+        test   %ecx,(%ecx)
+        pop    %eax
+        pop    %ecx
+        ret
+#endif // __i386__
