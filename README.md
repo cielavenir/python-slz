@@ -24,4 +24,4 @@ the stream is compatible with zlib deflate.
 
 ## Windows installation
 
-Now sdist installation is possible.
+Now sdist installation is possible. (Install via git until the version is incremented)
