@@ -24,4 +24,4 @@ the stream is compatible with zlib deflate.
 
 ## Windows installation
 
-Build procedure is complex ( see https://github.com/cielavenir/python-slz/blob/master/.github/workflows/wheel.yaml ), sdist is not supported. For http-direct-install, you need binary wheel.
+Now sdist installation is possible.

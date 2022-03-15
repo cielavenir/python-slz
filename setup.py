@@ -4,26 +4,34 @@ from os.path import dirname
 from os.path import abspath
 sys.path.append(dirname(abspath(__file__)))
 import monkeypatch_distutils
+import subprocess
 
 from setuptools import setup
+from setuptools.command.build_ext import build_ext
 try:
-	from pybind11.setup_helpers import Pybind11Extension
+    from pybind11.setup_helpers import Pybind11Extension
 except ImportError:
-	from setuptools import Extension as Pybind11Extension
+    from setuptools import Extension as Pybind11Extension
 
-sources = ['src/pyslz.cpp']
-extra_objects = []
-
-if platform.system() == 'Windows':
-    extra_objects.extend(['slz.o', 'chkstk.o'])
-else:
-    sources.append('src/libslz/src/slz.c')
+class build_ext_hook(build_ext, object):
+    def build_extension(self, ext):
+        if platform.system() == 'Windows':
+            if sys.maxsize < 1<<32:
+                msiz = '-m32'
+            else:
+                msiz = '-m64'
+            subprocess.check_call(['gcc', msiz, '-c', '-DPRECOMPUTE_TABLES=1', '-o', 'slz.o', '-O2', 'src/libslz/src/slz.c'])
+            subprocess.check_call(['gcc', msiz, '-c', '-o', 'chkstk.o', 'src/chkstk.S'])
+            ext.extra_objects.extend(['slz.o', 'chkstk.o'])
+        else:
+            ext.sources.append('src/libslz/src/slz.c')
+        build_ext.build_extension(self, ext)
 
 ext_modules = [
     Pybind11Extension(
         "slz",
-        sources,
-        extra_objects=extra_objects,
+        sources=['src/pyslz.cpp'],
+        extra_objects=[],
         extra_compile_args=['-O2'],
         extra_link_args=['-s'],
     ),
@@ -40,7 +48,7 @@ setup(
     author_email='cielartisan@gmail.com',
     setup_requires=["pybind11"],
     ext_modules=ext_modules,
-    #cmdclass={"build_ext": build_ext},
+    cmdclass={"build_ext": build_ext_hook},
     zip_safe=False,
     include_package_data=True,
     # platforms='any',
