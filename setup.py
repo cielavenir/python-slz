@@ -50,7 +50,11 @@ class build_ext_hook(build_ext, object):
                     b.finalize_options()
                     libpath = next(join(dir, libname) for dir in b.library_dirs if isfile(join(dir, libname)))
                     print(libpath)
-                    subprocess.check_call([gxx, '-shared', '-o', pydpath, '-static-libstdc++', '-static-libgcc']+ext.extra_objects+[libpath])
+                    subprocess.check_call([
+                        gxx, '-shared', '-o', pydpath,
+                        '-static-libstdc++', '-static-libgcc',
+                        '-Wl,-Bstatic,--whole-archive', '-lwinpthread', '-Wl,--no-whole-archive,-Bdynamic',
+                    ]+ext.extra_objects+[libpath])
                     return
             else:
                 ext.sources.append('src/pyslz.cpp')
