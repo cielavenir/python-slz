@@ -37,18 +37,18 @@ class build_ext_hook(build_ext, object):
                     '-I', sysconfig.get_paths()['platinclude'],
                     '-I', pybind11.get_include(),
                     'src/pyslz.cpp'])
-                if False:
-                    ext.extra_objects.append('pyslz.o')
-                else:
+                ext.extra_objects.append('pyslz.o')
+                if True:
+                    ext.extra_objects.extend(['slz.o'])
                     pydname = 'build/lib.%s-%d.%d/%s.pyd'%(plat, sys.hexversion // 16777216, sys.hexversion // 65536 % 256, ext.name.replace('.', '/'))
                     subprocess.check_call(['mkdir', '-p', dirname(pydname)])
                     # https://stackoverflow.com/a/48360354/2641271
                     d = Distribution()
                     b = d.get_command_class('build_ext')(d)
                     b.finalize_options()
-                    subprocess.check_call([gxx, '-shared', '-o', pydname),
-                        'pyslz.o', 'slz.o', 'chkstk.o', '-lpython27',
-                    ]+sum((['-L', dir] for dir in b.library_dirs), []))
+                    subprocess.check_call([gxx, '-shared', '-o', pydname]),
+                        '-lpython%d%d'%(sys.hexversion // 16777216, sys.hexversion // 65536 % 256),
+                    ]+ext.extra_objects+sum((['-L', dir] for dir in b.library_dirs), []))
                     return
             else:
                 ext.sources.append('src/pyslz.cpp')
