@@ -66,6 +66,12 @@ jobs:
       run:
         python -m build --sdist
     - name: Build wheel
+      if: ${{ matrix.os != 'windows-latest' || matrix.architecture != 'x86' }}
+      run: |
+        python -m build --wheel
+    - name: Build wheel (Win32)
+      if: ${{ matrix.os == 'windows-latest' && matrix.architecture == 'x86' }}
+      shell: msys2 {0}
       run: |
         python -m build --wheel
     - name: Audit wheel
