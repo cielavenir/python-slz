@@ -62,15 +62,15 @@ class build_ext_hook(build_ext, object):
             ext.sources.extend(['src/pyslz.cpp', 'src/libslz/src/slz.c'])
         build_ext.build_extension(self, ext)
 
-kwargs = {
-    'name': 'slz',
-    'sources': [],
-    'extra_objects': [],
-    'extra_compile_args': ['-O2'],
-    'extra_link_args': ['-s'],
-}
-klass = Extension if platform.system() == 'Windows' and sys.version_info < (3,5) else Pybind11Extension
-ext_modules = [klass(**kwargs)]
+ext_modules = [
+    Pybind11Extension(
+        name="slz",
+        sources=['src/pyslz.cpp'],
+        extra_objects=[],
+        extra_compile_args=['-O2'],
+        extra_link_args=['-s'],
+    ),
+]
 
 setup(
     name='slz',
