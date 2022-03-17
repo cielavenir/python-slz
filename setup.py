@@ -17,21 +17,23 @@ class build_ext_hook(build_ext, object):
     def build_extension(self, ext):
         if platform.system() == 'Windows':
             if sys.maxsize < 1<<32:
-                msiz = '-m32'
+                gcc = 'i686-w64-mingw32-gcc'
+                gxx = 'i686-w64-mingw32-g++'
             else:
-                msiz = '-m64'
-            subprocess.check_call(['gcc', msiz, '-c', '-DPRECOMPUTE_TABLES=1', '-o', 'slz.o', '-O2', 'src/libslz/src/slz.c'])
-            subprocess.check_call(['gcc', msiz, '-c', '-o', 'chkstk.o', 'src/chkstk.S'])
+                gcc = 'x86_64-w64-mingw32-gcc'
+                gxx = 'x86_64-w64-mingw32-g++'
+            subprocess.check_call([gcc, '-c', '-DPRECOMPUTE_TABLES=1', '-o', 'slz.o', '-O2', 'src/libslz/src/slz.c'])
+            subprocess.check_call([gcc, '-c', '-o', 'chkstk.o', 'src/chkstk.S'])
             if sys.version_info < (3,5):
                 import sysconfig
                 import pybind11
-                subprocess.check_call(['g++', msiz, '-c', '-o', 'pyslz.o', '-O2',
+                subprocess.check_call([gxx, '-c', '-o', 'pyslz.o', '-O2',
                     '-I', sysconfig.get_paths()['include'],
                     '-I', sysconfig.get_paths()['platinclude'],
                     '-I', pybind11.get_include(),
                     'src/pyslz.cpp'])
                 # ext.extra_objects.append('pyslz.o')
-                subprocess.check_call(['g++', msiz, '-shared', '-o', 'slz.pyd',
+                subprocess.check_call([gxx, '-shared', '-o', 'build\lib.win32-2.7\slz.pyd',
                     'pyslz.o', 'slz.o', 'chkstk.o',
                     '-L', sysconfig.get_paths()['stdlib'],
                     '-lpython27'
