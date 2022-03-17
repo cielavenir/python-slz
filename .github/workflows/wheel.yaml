@@ -12,8 +12,8 @@ jobs:
         os: [macos-latest, windows-latest]
         architecture: ["x64", "x86"]
         exclude:
-          - python-version: '2.7' # pybind11 requires VC2015 and thus can build only >=3.5 wheels
-            os: windows-latest
+          # - python-version: '2.7' # pybind11 requires VC2015 and thus can build only >=3.5 wheels
+          #   os: windows-latest
           - os: macos-latest
             architecture: "x86"
         include:

@@ -1,5 +1,6 @@
 import sys
 import platform
+import sysconfig
 from os.path import dirname
 from os.path import abspath
 sys.path.append(dirname(abspath(__file__)))
@@ -22,15 +23,20 @@ class build_ext_hook(build_ext, object):
                 msiz = '-m64'
             subprocess.check_call(['gcc', msiz, '-c', '-DPRECOMPUTE_TABLES=1', '-o', 'slz.o', '-O2', 'src/libslz/src/slz.c'])
             subprocess.check_call(['gcc', msiz, '-c', '-o', 'chkstk.o', 'src/chkstk.S'])
+            if sys.version_info < (3,5):
+                subprocess.check_call(['g++', msiz, '-c', '-o', 'pyslz.o', '-O2', '-I', sysconfig.get_paths()['include'], 'src/pyslz.cpp'])
+                ext.extra_objects.append(['pyslz.o'])
+            else:
+                ext.sources.append('src/pyslz.cpp')
             ext.extra_objects.extend(['slz.o', 'chkstk.o'])
         else:
-            ext.sources.append('src/libslz/src/slz.c')
+            ext.sources.extend(['src/pyslz.cpp', 'src/libslz/src/slz.c'])
         build_ext.build_extension(self, ext)
 
 ext_modules = [
     Pybind11Extension(
         "slz",
-        sources=['src/pyslz.cpp'],
+        sources=[],
         extra_objects=[],
         extra_compile_args=['-O2'],
         extra_link_args=['-s'],
