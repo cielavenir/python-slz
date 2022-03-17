@@ -33,7 +33,6 @@ class build_ext_hook(build_ext, object):
                 import sysconfig
                 import pybind11
                 subprocess.check_call([gxx, '-c', '-o', 'pyslz.o', '-O2',
-                    '-DPy_ENABLE_SHARED=1',
                     '-I', sysconfig.get_paths()['include'],
                     '-I', sysconfig.get_paths()['platinclude'],
                     '-I', pybind11.get_include(),
@@ -41,15 +40,16 @@ class build_ext_hook(build_ext, object):
                 ext.extra_objects.append('pyslz.o')
                 if True:
                     ext.extra_objects.extend(['slz.o'])
-                    pydname = 'build/lib.%s-%d.%d/%s.pyd'%(plat, sys.hexversion // 16777216, sys.hexversion // 65536 % 256, ext.name.replace('.', '/'))
-                    subprocess.check_call(['mkdir', '-p', dirname(pydname)])
+                    pydpath = 'build/lib.%s-%d.%d/%s.pyd'%(plat, sys.hexversion // 16777216, sys.hexversion // 65536 % 256, ext.name.replace('.', '/'))
+                    subprocess.check_call(['mkdir', '-p', dirname(pydpath)])
+                    libname = 'python%d%d.lib'%(sys.hexversion // 16777216, sys.hexversion // 65536 % 256)
+                    libpath = next(join(dir, libname) for dir in b.library_dirs if isfile(join(dir, libname)))
+                    print(libpath)
                     # https://stackoverflow.com/a/48360354/2641271
                     d = Distribution()
                     b = d.get_command_class('build_ext')(d)
                     b.finalize_options()
-                    subprocess.check_call([gxx, '-shared', '-o', pydname,
-                        '-lpython%d%d'%(sys.hexversion // 16777216, sys.hexversion // 65536 % 256),
-                    ]+ext.extra_objects+sum((['-L', dir] for dir in b.library_dirs), []))
+                    subprocess.check_call([gxx, '-shared', '-o', pydpath]+ext.extra_objects+[libpath])
                     return
             else:
                 ext.sources.append('src/pyslz.cpp')
