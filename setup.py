@@ -43,12 +43,12 @@ class build_ext_hook(build_ext, object):
                     pydpath = 'build/lib.%s-%d.%d/%s.pyd'%(plat, sys.hexversion // 16777216, sys.hexversion // 65536 % 256, ext.name.replace('.', '/'))
                     subprocess.check_call(['mkdir', '-p', dirname(pydpath)])
                     libname = 'python%d%d.lib'%(sys.hexversion // 16777216, sys.hexversion // 65536 % 256)
-                    libpath = next(join(dir, libname) for dir in b.library_dirs if isfile(join(dir, libname)))
-                    print(libpath)
                     # https://stackoverflow.com/a/48360354/2641271
                     d = Distribution()
                     b = d.get_command_class('build_ext')(d)
                     b.finalize_options()
+                    libpath = next(join(dir, libname) for dir in b.library_dirs if isfile(join(dir, libname)))
+                    print(libpath)
                     subprocess.check_call([gxx, '-shared', '-o', pydpath]+ext.extra_objects+[libpath])
                     return
             else:
