@@ -46,7 +46,7 @@ class build_ext_hook(build_ext, object):
                     d = Distribution()
                     b = d.get_command_class('build_ext')(d)
                     b.finalize_options()
-                    subprocess.check_call([gxx, '-shared', '-o', pydname]),
+                    subprocess.check_call([gxx, '-shared', '-o', pydname,
                         '-lpython%d%d'%(sys.hexversion // 16777216, sys.hexversion // 65536 % 256),
                     ]+ext.extra_objects+sum((['-L', dir] for dir in b.library_dirs), []))
                     return
