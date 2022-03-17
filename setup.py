@@ -34,7 +34,7 @@ class build_ext_hook(build_ext, object):
                 import sysconfig
                 import pybind11
                 subprocess.check_call([gxx, '-c', '-o', 'pyslz.o', '-O2',
-                    '-DHAVE_UINTPTR_T=1',
+                    '-DHAVE_UINTPTR_T=1', '-DMS_WIN64=1',
                     '-I', sysconfig.get_paths()['include'],
                     '-I', sysconfig.get_paths()['platinclude'],
                     '-I', pybind11.get_include(),
