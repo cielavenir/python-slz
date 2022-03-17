@@ -24,7 +24,7 @@ class build_ext_hook(build_ext, object):
                 gcc = 'i686-w64-mingw32-gcc'
                 gxx = 'i686-w64-mingw32-g++'
                 plat = 'win32'
-                flags = []
+                win64flags = []
             else:
                 gcc = 'x86_64-w64-mingw32-gcc'
                 gxx = 'x86_64-w64-mingw32-g++'
