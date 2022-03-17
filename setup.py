@@ -3,6 +3,7 @@ import platform
 from os.path import join
 from os.path import dirname
 from os.path import abspath
+from os.path import isfile
 sys.path.append(dirname(abspath(__file__)))
 import monkeypatch_distutils
 import subprocess
