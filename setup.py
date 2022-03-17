@@ -30,7 +30,7 @@ class build_ext_hook(build_ext, object):
                     '-I', sysconfig.get_paths()['platinclude'],
                     '-I', pybind11.get_include(),
                     'src/pyslz.cpp'])
-                ext.extra_objects.append(['pyslz.o'])
+                ext.extra_objects.append('pyslz.o')
             else:
                 ext.sources.append('src/pyslz.cpp')
             ext.extra_objects.extend(['slz.o', 'chkstk.o'])
