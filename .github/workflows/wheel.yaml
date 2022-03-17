@@ -49,6 +49,10 @@ jobs:
       run: |
         curl -L -O https://github.com/reider-roque/sulley-win-installer/raw/master/VCForPython27.msi
         msiexec /i VCForPython27.msi /qn
+    - name: "Install mingw-w64-i686-gcc"
+      if: ${{ matrix.os == 'windows-latest' && matrix.python-version == 'x86' }}
+      run: |
+        pacman -S mingw-w64-i686-gcc
     #     choco install vcpython27 -f -y
     - name: Install pypa-build
       run: |
