@@ -21,21 +21,21 @@ class build_ext_hook(build_ext, object):
     def build_extension(self, ext):
         if platform.system() == 'Windows':
             if sys.maxsize < 1<<32:
-                gcc = 'i686-w64-mingw32-gcc'
-                gxx = 'i686-w64-mingw32-g++'
+                gcc = '-m32'
+                gxx = '-m32'
                 plat = 'win32'
                 win64flags = []
             else:
-                gcc = 'x86_64-w64-mingw32-gcc'
-                gxx = 'x86_64-w64-mingw32-g++'
+                gcc = '-m64'
+                gxx = '-m64'
                 plat = 'win-amd64'
                 win64flags = ['-DMS_WIN64=1']
-            subprocess.check_call([gcc, '-c', '-DPRECOMPUTE_TABLES=1', '-o', 'slz.o', '-O2', 'src/libslz/src/slz.c'])
-            subprocess.check_call([gcc, '-c', '-o', 'chkstk.o', 'src/chkstk.S'])
+            subprocess.check_call(['clang', gcc, '-c', '-DPRECOMPUTE_TABLES=1', '-o', 'slz.o', '-O2', 'src/libslz/src/slz.c'])
+            subprocess.check_call(['clang', gcc, '-c', '-o', 'chkstk.o', 'src/chkstk.S'])
             if sys.version_info < (3,5):
                 import sysconfig
                 import pybind11
-                subprocess.check_call([gxx, '-c', '-o', 'pyslz.o', '-O2',
+                subprocess.check_call(['clang++', gxx, '-c', '-o', 'pyslz.o', '-O2',
                     '-DHAVE_UINTPTR_T=1',
                     '-I', sysconfig.get_paths()['include'],
                     '-I', sysconfig.get_paths()['platinclude'],
@@ -54,9 +54,7 @@ class build_ext_hook(build_ext, object):
                     libpath = next(join(dir, libname) for dir in b.library_dirs if isfile(join(dir, libname)))
                     print(libpath)
                     subprocess.check_call([
-                        gxx, '-shared', '-o', pydpath,
-                        '-static-libstdc++', '-static-libgcc',
-                        '-Wl,-Bstatic,--whole-archive', '-lwinpthread', '-Wl,--no-whole-archive,-Bdynamic',
+                        'clang++', gxx, '-shared', '-o', pydpath,
                     ]+ext.extra_objects+[libpath])
                     return
             else:
