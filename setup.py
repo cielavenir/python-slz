@@ -6,7 +6,7 @@ sys.path.append(dirname(abspath(__file__)))
 import monkeypatch_distutils
 import subprocess
 
-from setuptools import setup
+from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 try:
     from pybind11.setup_helpers import Pybind11Extension
@@ -38,15 +38,15 @@ class build_ext_hook(build_ext, object):
             ext.sources.extend(['src/pyslz.cpp', 'src/libslz/src/slz.c'])
         build_ext.build_extension(self, ext)
 
-ext_modules = [
-    Pybind11Extension(
-        "slz",
-        sources=[],
-        extra_objects=[],
-        extra_compile_args=['-O2'],
-        extra_link_args=['-s'],
-    ),
-]
+kwargs = {
+    'name': 'slz',
+    'sources': [],
+    'extra_objects': [],
+    'extra_compile_args': ['-O2'],
+    'extra_link_args': ['-s'],
+}
+klass = Extension if platform.system() == 'Windows' and sys.version_info < (3,5) else Pybind11Extension
+ext_modules = [klass(**kwargs)]
 
 setup(
     name='slz',
