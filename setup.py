@@ -7,7 +7,9 @@ sys.path.append(dirname(abspath(__file__)))
 import monkeypatch_distutils
 import subprocess
 
-from setuptools import setup, Extension
+from setuptools import setup
+from setuptools import Extension
+from setuptools.dist import Distribution
 from setuptools.command.build_ext import build_ext
 try:
     from pybind11.setup_helpers import Pybind11Extension
@@ -36,11 +38,15 @@ class build_ext_hook(build_ext, object):
                 # ext.extra_objects.append('pyslz.o')
                 subprocess.check_call(['mkdir', '-p', 'build\lib.win32-2.7'])
                 subprocess.check_call(['ls', join(dirname(sys.executable))])
+                # https://stackoverflow.com/a/48360354/2641271
+                d = Distribution()
+                b = d.get_command_class('build_ext')(d)
+                b.finalize_options()
+                print(b.library_dirs)
+                subprocess.check_call(['ls'] + b.library_dirs)
                 subprocess.check_call([gxx, '-shared', '-o', 'build\lib.win32-2.7\slz.pyd',
-                    'pyslz.o', 'slz.o', 'chkstk.o',
-                    '-L', join(dirname(sys.executable)),
-                    '-lpython27'
-                ])
+                    'pyslz.o', 'slz.o', 'chkstk.o', '-lpython27',
+                ]+sum((['-L', dir] for dir in b.library_dirs), []))
                 return
             else:
                 ext.sources.append('src/pyslz.cpp')
