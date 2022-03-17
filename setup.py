@@ -40,7 +40,7 @@ class build_ext_hook(build_ext, object):
                 if False:
                     ext.extra_objects.append('pyslz.o')
                 else:
-                    pydname = 'build/lib.%s-%d.%d/%s.pyd'%(plat, sys.hexversion // 16777216, sys.hexversion // 65536 % 256, ext.name.replace('.', '/')
+                    pydname = 'build/lib.%s-%d.%d/%s.pyd'%(plat, sys.hexversion // 16777216, sys.hexversion // 65536 % 256, ext.name.replace('.', '/'))
                     subprocess.check_call(['mkdir', '-p', dirname(pydname)])
                     # https://stackoverflow.com/a/48360354/2641271
                     d = Distribution()
