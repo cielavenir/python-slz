@@ -1,5 +1,6 @@
 import sys
 import platform
+from os.path import join
 from os.path import dirname
 from os.path import abspath
 sys.path.append(dirname(abspath(__file__)))
@@ -34,10 +35,10 @@ class build_ext_hook(build_ext, object):
                     'src/pyslz.cpp'])
                 # ext.extra_objects.append('pyslz.o')
                 subprocess.check_call(['mkdir', '-p', 'build\lib.win32-2.7'])
-                subprocess.check_call(['ls', os.path.join(os.path.dirname(sys.executable))])
+                subprocess.check_call(['ls', join(dirname(sys.executable))])
                 subprocess.check_call([gxx, '-shared', '-o', 'build\lib.win32-2.7\slz.pyd',
                     'pyslz.o', 'slz.o', 'chkstk.o',
-                    '-L', os.path.join(os.path.dirname(sys.executable)),
+                    '-L', join(dirname(sys.executable)),
                     '-lpython27'
                 ])
                 return
