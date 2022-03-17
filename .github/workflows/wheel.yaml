@@ -24,6 +24,9 @@ jobs:
           - python-version: '3.4'
             os: windows-latest
             architecture: "x86"
+          - python-version: '3.4'
+            os: windows-latest
+            architecture: "x64"
 
     steps:
     - uses: actions/checkout@v2
