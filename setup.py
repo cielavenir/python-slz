@@ -65,7 +65,7 @@ class build_ext_hook(build_ext, object):
 ext_modules = [
     Pybind11Extension(
         name="slz",
-        sources=['src/pyslz.cpp'],
+        sources=[],
         extra_objects=[],
         extra_compile_args=['-O2'],
         extra_link_args=['-s'],
