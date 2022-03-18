@@ -9,7 +9,6 @@ import monkeypatch_distutils
 import subprocess
 
 from setuptools import setup
-from setuptools import Extension
 from setuptools.dist import Distribution
 from setuptools.command.build_ext import build_ext
 try:
