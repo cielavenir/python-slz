@@ -1,6 +1,7 @@
 import sys
 import platform
 from os.path import join
+from os.path import basename
 from os.path import dirname
 from os.path import abspath
 from os.path import isfile
@@ -16,6 +17,7 @@ try:
 except ImportError:
     from setuptools import Extension as Pybind11Extension
 
+extra_compile_args=['-O2']
 class build_ext_hook(build_ext, object):
     def build_extension(self, ext):
         if platform.system() == 'Windows':
@@ -27,20 +29,32 @@ class build_ext_hook(build_ext, object):
                 msiz = '-m64'
                 plat = 'win-amd64'
                 win64flags = ['-DMS_WIN64=1']
+            ext.sources.remove('src/libslz/src/slz.c')
             subprocess.check_call(['clang', msiz, '-c', '-DPRECOMPUTE_TABLES=1', '-o', 'slz.o', '-O2', 'src/libslz/src/slz.c'])
             subprocess.check_call(['clang', msiz, '-c', '-o', 'chkstk.o', 'src/chkstk.S'])
+            ext.extra_objects.extend(['slz.o', 'chkstk.o'])
             if sys.version_info < (3,5):
                 import sysconfig
                 import pybind11
-                subprocess.check_call(['clang++', msiz, '-c', '-o', 'pyslz.o', '-O2',
+                source = ext.sources[0]
+                objname = basename(source)+'.o'
+                subprocess.check_call([
+                    'clang++', msiz, '-c', '-o', objname,
                     '-DHAVE_UINTPTR_T=1',
                     '-I', sysconfig.get_paths()['include'],
                     '-I', sysconfig.get_paths()['platinclude'],
                     '-I', pybind11.get_include(),
-                    'src/pyslz.cpp']+win64flags)
-                ext.extra_objects.append('pyslz.o')
+                    source]+extra_compile_args+win64flags+sum((['-I', dir] for dir in ext.include_dirs), []))
+                ext.extra_objects.append(objname)
+                ext.sources.pop(0)
                 if True:
-                    ext.extra_objects.extend(['slz.o'])
+                    for source in ext.sources:
+                        objname = basename(source)+'.o'
+                        cmd = 'clang' if source.endswith('.c') else 'clang++'
+                        subprocess.check_call([
+                            cmd, msiz, '-c', '-o', objname, source
+                        ]+extra_compile_args+sum((['-I', dir] for dir in ext.include_dirs), []))
+                        ext.extra_objects.append(objname)
                     pydpath = 'build/lib.%s-%d.%d/%s.pyd'%(plat, sys.hexversion // 16777216, sys.hexversion // 65536 % 256, ext.name.replace('.', '/'))
                     subprocess.check_call(['mkdir', '-p', dirname(pydpath)])
                     libname = 'python%d%d.lib'%(sys.hexversion // 16777216, sys.hexversion // 65536 % 256)
@@ -52,22 +66,22 @@ class build_ext_hook(build_ext, object):
                     print(libpath)
                     subprocess.check_call([
                         'clang++', msiz, '-shared', '-o', pydpath,
-                    ]+ext.extra_objects+[libpath])
+                    ]+ext.extra_objects+ext.extra_link_args+[libpath])
                     return
-            else:
-                ext.sources.append('src/pyslz.cpp')
-            ext.extra_objects.extend(['slz.o', 'chkstk.o'])
-        else:
-            ext.sources.extend(['src/pyslz.cpp', 'src/libslz/src/slz.c'])
         build_ext.build_extension(self, ext)
 
 ext_modules = [
     Pybind11Extension(
         name="slz",
-        sources=[],
+        sources=[
+            'src/pyslz.cpp',
+            'src/libslz/src/slz.c',
+        ],
+        include_dirs=[],
         extra_objects=[],
-        extra_compile_args=['-O2'],
+        extra_compile_args=list(extra_compile_args),
         extra_link_args=['-s'],
+        #extra_link_args=['-Wl,--no-undefined'],
     ),
 ]
 
