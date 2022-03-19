@@ -128,7 +128,7 @@ setup(
     long_description=open("../README.md").read(),
     version='0.0.0.5',
     url='https://github.com/cielavenir/python-slz',
-    license='PSF',
+    license='MIT',
     author='cielavenir',
     author_email='cielartisan@gmail.com',
     #setup_requires=["pybind11"],
@@ -140,7 +140,7 @@ setup(
     classifiers=[
         'Development Status :: 4 - Beta',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: Python Software Foundation License',
+        'License :: OSI Approved :: MIT License',
         'Operating System :: POSIX',
         'Operating System :: Microsoft :: Windows',
         'Operating System :: MacOS :: MacOS X',
