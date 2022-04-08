@@ -24,4 +24,8 @@ the stream is compatible with zlib deflate.
 
 ## Windows installation
 
-Now sdist installation is possible. (Install via git until the version is incremented)
+Now sdist installation is possible.
+
+## Apple M1 wheel
+
+It will be considered after https://github.com/actions/python-versions/pull/114 is done.
