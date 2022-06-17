@@ -27,6 +27,7 @@ jobs:
     - name: Clean build
       run: |
         sudo rm -rf build
+        sudo rm -f dist/*-linux*.whl
     - name: Build wheel (3)
       uses: cielavenir/python-wheels-manylinux-build@v0.4.2-musllinux_1_1_x86_64
       with:
