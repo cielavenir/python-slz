@@ -90,7 +90,7 @@ setup(
     description='a (light) binding for libslz',
     long_description=open("README.md").read(),
     long_description_content_type='text/markdown',
-    version='0.0.0.5',
+    version='0.0.0.6',
     url='https://github.com/cielavenir/python-slz',
     license='MIT',
     author='cielavenir',
