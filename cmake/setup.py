@@ -8,6 +8,10 @@ import sys
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 
+versionContext = {}
+with open('../slz/version.py') as f:
+    exec(f.read(), versionContext)
+
 # Convert distutils Windows platform specifiers to CMake -A arguments
 PLAT_TO_CMAKE = {
     "win32": "Win32",
@@ -126,13 +130,15 @@ setup(
     name='slz',
     description='a (light) binding for libslz',
     long_description=open("../README.md").read(),
-    version='0.0.0.5',
+    version=versionContext['__version__'],
     url='https://github.com/cielavenir/python-slz',
     license='MIT',
     author='cielavenir',
     author_email='cielartisan@gmail.com',
     #setup_requires=["pybind11"],
-    ext_modules=[CMakeExtension('slz')],
+    package_dir = {'': '..'},
+    packages=['slz'],
+    ext_modules=[CMakeExtension('slz.slz')],
     cmdclass={"build_ext": CMakeBuild},
     zip_safe=False,
     include_package_data=True,

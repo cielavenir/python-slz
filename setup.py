@@ -17,6 +17,10 @@ try:
 except ImportError:
     from setuptools import Extension as Pybind11Extension
 
+versionContext = {}
+with open('slz/version.py') as f:
+    exec(f.read(), versionContext)
+
 extra_compile_args=['-O2']
 class build_ext_hook(build_ext, object):
     def build_extension(self, ext):
@@ -72,7 +76,7 @@ class build_ext_hook(build_ext, object):
 
 ext_modules = [
     Pybind11Extension(
-        name="slz",
+        name="slz.slz",
         sources=[
             'src/pyslz.cpp',
             'src/libslz/src/slz.c',
@@ -90,12 +94,13 @@ setup(
     description='a (light) binding for libslz',
     long_description=open("README.md").read(),
     long_description_content_type='text/markdown',
-    version='0.0.0.6',
+    version=versionContext['__version__'],
     url='https://github.com/cielavenir/python-slz',
     license='MIT',
     author='cielavenir',
     author_email='cielartisan@gmail.com',
     setup_requires=["pybind11"],
+    packages=['slz'],
     ext_modules=ext_modules,
     cmdclass={"build_ext": build_ext_hook},
     zip_safe=False,
