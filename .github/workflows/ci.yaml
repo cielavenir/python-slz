@@ -86,4 +86,5 @@ jobs:
         python -m pip install .
     - name: Test
       run: |
-        python -m pytest -v test
+        # has to be script to avoid current directory being sys.path
+        pytest -v test
